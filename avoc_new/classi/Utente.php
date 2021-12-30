@@ -1,6 +1,6 @@
 <?php
 
-    class Utente{
+    class abstract Utente{
 
         public $cognome;
         public $nome;
@@ -57,6 +57,7 @@
                 $Nick = $TemptoCheck;
               }
             }
+              $conn->close();
               return $Nick;
           }
 

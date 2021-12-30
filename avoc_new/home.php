@@ -79,7 +79,7 @@ if(isset($_SESSION['UserId']))
                             <div>
                                 <p class="card-title title animated pulse">Avoc</p>
                                 <p class="text-dark ">
-                                  Non sai cosa scegliere tra un finanziamento o un leasing?
+                                  Non sai cosa scegliere tra noleggio o leasing?
                                   <br />Scegli Avoc!
                                 </p>
                                 <a href="calcola-finanziamento.php">
@@ -167,7 +167,7 @@ if(isset($_SESSION['UserId']))
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
-            © 2019 Copyright:
+            © 2022 Copyright:
             <a class="colorWhite" href="home.php"> Avoc.altervista.org</a>
         </div>
         <!-- Copyright -->

@@ -1,11 +1,13 @@
 <?php
 
-include_once "php/Connessione.php";
-include_once "php/Utente.php";
-include_once "php/UtenteRegistrato.php";
+include_once "classi/Connessione.php";
+include_once "classi/Utente.php";
+include_once "classi/UtenteRegistrato.php";
+include_once "utils.php";
+
 session_start();
 
-include_once "utils.php";
+
 if (isset($_POST["pass"]) && isset($_POST["pass2"])) {
     $_SESSION["UserId"] = "";
     if ($_POST["pass"] != $_POST["pass2"]) {
@@ -259,7 +261,7 @@ if (isset($_POST["pass"]) && isset($_POST["pass2"])) {
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-4">
-            © 2019 Copyright:
+            © 2022 Copyright:
             <a class="colorWhite" href="home.php"> Avoc.altervista.org</a>
         </div>
         <!-- Copyright -->

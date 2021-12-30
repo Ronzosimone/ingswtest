@@ -1,5 +1,9 @@
 <?php
-/*------ Session start --------*/
+
+include_once ("classi/Connessione.php");
+include_once ("classi/Riepilogo.php");
+include_once ("classi/Veicolo.php");
+
 session_start();
 
 $tipo = $_GET['tipo'];
@@ -22,122 +26,77 @@ $speseIstruttoria;
 $bolli;
 $speseRendiconto;
 $sepa;
-
-
-
 $prezzoVeicolo;
+
+
+
 /* mesi */
 if ($mesi == 12) {
     $riscatto = number_format($prezzo * 0.75, 2, '.', '');
-	$prezzoVeicolo = number_format($prezzo / 0.20, 2, '.', '');
-}
-else if ($mesi == 24) {
+    $prezzoVeicolo = number_format($prezzo / 0.20, 2, '.', '');
+} else if ($mesi == 24) {
     $riscatto = number_format($prezzo * 0.70, 2, '.', '');
-	$prezzoVeicolo = number_format($prezzo / 0.34, 2, '.', '');
-}
-else if ($mesi == 36) {
+    $prezzoVeicolo = number_format($prezzo / 0.34, 2, '.', '');
+} else if ($mesi == 36) {
     $riscatto = number_format($prezzo * 0.64, 2, '.', '');
-	$prezzoVeicolo = number_format($prezzo / 0.37, 2, '.', '');
-}
-else if ($mesi == 48) {
+    $prezzoVeicolo = number_format($prezzo / 0.37, 2, '.', '');
+} else if ($mesi == 48) {
     $riscatto = number_format($prezzo * 0.58, 2, '.', '');
-	$prezzoVeicolo = number_format($prezzo / 0.45, 2, '.', '');
-}
-else {
+    $prezzoVeicolo = number_format($prezzo / 0.45, 2, '.', '');
+} else {
     header("location: calcola-finanziamento.php"); /* controllo che i dati acquisiti dal get siano veritieri */
     exit;
 }
+
 
 /* fissa per km */
 if ($chilometraggio == 50000) {
     $fissaKm = 1.2;
-}
-else if ($chilometraggio == 60000) {
+} else if ($chilometraggio == 60000) {
     $fissaKm = 1.4;
-}
-else if ($chilometraggio == 70000) {
+} else if ($chilometraggio == 70000) {
     $fissaKm = 1.6;
-}
-else if ($chilometraggio == 80000) {
+} else if ($chilometraggio == 80000) {
     $fissaKm = 1.8;
-}
-else if ($chilometraggio == 90000) {
+} else if ($chilometraggio == 90000) {
     $fissaKm = 2;
-}
-else if ($chilometraggio == 100000) {
+} else if ($chilometraggio == 100000) {
     $fissaKm = 2.2;
-}
-else {
+} else {
     header("location: calcola-finanziamento.php"); /* controllo che i dati acquisiti dal get siano veritieri */
     exit;
 }
 
-/* Costi fissi */
-if ($tipo == 'leasing') {
-    $costiFissi = 0;
-    $marchiatura = 0;
-    $speseIstruttoria = 0;
-    $bolli = 0;
-    $pneumatici = 0;
-    $speseRendiconto = 0;
-    $sepa = 0;
-}
-else if ($tipo == 'noleggio') {
-    $costiFissi = number_format(200 + 300 + 16 + 3 + 3.50 + number_format(($prezzo * 0.0021) , 2, '.', ''), 2, '.', '');
-    $marchiatura = 200;
-    $speseIstruttoria = 300;
-    $bolli = 16;
-    $speseRendiconto = 3;
-    $pneumatici = number_format($prezzo * 0.0021, 2, '.', '');
-    $sepa = 3.50;
-}
-else {
-    header("location: calcola-finanziamento.php"); /* controllo che i dati acquisiti dal get siano veritieri */
-    exit;
-}
 
-/* Calcoli dati */
-$totDaFinanziare = number_format(((($prezzo) + ($prezzo) * ($fissaKm/100) + $costiFissi) - $anticipo) , 2, '.', '');
-$rataMensile = number_format(($totDaFinanziare*($tanMensile/100)*(1+($tanMensile/100))**$mesi)/((1+($tanMensile/100))**$mesi - 1), 2, '.', '');
-$totDaRimborsare = number_format($rataMensile * $mesi, 2, '.', '');
-$interessi = number_format($totDaRimborsare - $totDaFinanziare, 2, '.', '');
+$targa = Veicolo::getTarga($marca, $modello, $versione, $prezzoVeicolo);
 
-
-$mesiPagati = (rand(1, $mesi));
-
-
-$mysqli = new mysqli('localhost', 'avoc', '', 'my_avoc');
-if (mysqli_connect_errno()) {
-    exit();
-}
-
-if ($stmt = $mysqli->prepare("SELECT TargaVeicolo FROM Veicolo WHERE marca=? AND modello=? AND versione=? AND prezzo=?")) {
-    $stmt->bind_param("sssd", $marca, $modello, $versione, $prezzoVeicolo );
-    $stmt->execute();
-    $stmt->bind_result($targa);
-    $stmt->fetch();
-    $stmt->close();
-}
 if (!isset($targa) || empty($targa) || is_null($targa)) {
     header("location: calcola-finanziamento.php"); /* controllo che i dati acquisiti dal get siano veritieri */
     exit;
 }
-    //Inserimento con utente registrato
-    if (isset($_POST['setValues'])) {
-        $mysqli = new mysqli('localhost', 'avoc', '', 'my_avoc');
-        if (mysqli_connect_errno()) {
-            exit();
-        }
-        if ($stmt = $mysqli->prepare("INSERT INTO Operazione (tipo, durata, mesiPagati, anticipo, km, valoreRiscatto, canoneMensile, tanFisso, totDaFinanziare, totDaRimborsare, marchiature, polizzaPneumatici, bolliContrattuali, speseIstruttoria, speseRendiconto, sepa, IDutente, TargaVeicolo, interessi, tanMensile, taeg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-            $stmt->bind_param("siididddddddddddisddd", $tipo, $mesi, $mesiPagati, $anticipo, $chilometraggio, $riscatto, $rataMensile, $tanFisso, $totDaFinanziare, $totDaRimborsare, $marchiatura, $pneumatici, $bolli, $speseIstruttoria, $speseRendiconto, $sepa, $_SESSION['UserId'], $targa, $interessi, $tanMensile, $taeg);
-            $stmt->execute();
-            $stmt->close();
-        }
-        $mysqli->close();
-        echo '<script>alert("Eskere- '.$_SESSION['UserId'].'");</script>';
-        header("location: user.php"); /*Redirect*/
+$totDaFinanziare = number_format(((($prezzo) + ($prezzo) * ($fissaKm / 100) + $costiFissi) - $anticipo), 2, '.', '');
+$rataMensile = number_format(($totDaFinanziare * ($tanMensile / 100) * (1 + ($tanMensile / 100)) **$mesi) / ((1 + ($tanMensile / 100)) **$mesi - 1), 2, '.', '');
+$totDaRimborsare = number_format($rataMensile * $mesi, 2, '.', '');
+$interessi = number_format($totDaRimborsare - $totDaFinanziare, 2, '.', '');
+$mesiPagati = (rand(1, $mesi));
 
+$riepilogo = new Riepilogo($tipo, $targa, $mesi, $prezzo, $chilometraggio, $anticipo, $riscatto, $fissaKm, $prezzoVeicolo, $totDaFinanziare, $rataMensile, $totDaRimborsare, $interessi);
+
+echo $riepilogo->costiFissi;
+
+//Inserimento con utente registrato
+if (isset($_POST['setValues'])) {
+    if ($conn->connect_errno) {
+        exit();
     }
+    if ($stmt = $conn->prepare("INSERT INTO Operazione (tipo, durata, mesiPagati, anticipo, km, valoreRiscatto, canoneMensile, tanFisso, totDaFinanziare, totDaRimborsare, marchiature, polizzaPneumatici, bolliContrattuali, speseIstruttoria, speseRendiconto, sepa, IDutente, TargaVeicolo, interessi, tanMensile, taeg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+        $stmt->bind_param("siididddddddddddisddd", $riepilogo->tipo, $riepilogo->mesi, $riepilogo->mesiPagati, $riepilogo->anticipo, $riepilogo->chilometraggio, $riepilogo->riscatto, $riepilogo->rataMensile, $riepilogo->tanFisso, $riepilogo->totDaFinanziare, $riepilogo->totDaRimborsare, $riepilogo->marchiatura, $riepilogo->pneumatici, $riepilogo->bolli, $riepilogo->speseIstruttoria, $riepilogo->speseRendiconto, $riepilogo->sepa, $_SESSION['UserId'], $riepilogo->targa, $riepilogo->interessi, $riepilogo->tanMensile, $riepilogo->taeg);
+        $stmt->execute();
+    }
+    $conn->close();
+    echo '<script>alert("Eskere- ' . $_SESSION['UserId'] . '");</script>';
+    header("location: user.php"); /*Redirect*/
+}
 ?>
 
 
@@ -242,7 +201,7 @@ if (!isset($targa) || empty($targa) || is_null($targa)) {
         <!-- titoletto -->
         <div class="row">
             <div class="col">
-                <p class="center">Prestito on line: confronta e calcola la rata del tuo finanziamento</p>
+                <p class="center">Un mondo più vicino ai clienti</p>
             </div>
         </div>
 
@@ -302,7 +261,7 @@ if (!isset($targa) || empty($targa) || is_null($targa)) {
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
-            © 2019 Copyright:
+            © 2022 Copyright:
             <a class="colorWhite" href="home.php"> Avoc.altervista.org</a>
         </div>
         <!-- Copyright -->

@@ -1,12 +1,11 @@
 <?php
 session_start();
 include_once("php/utils.php");
+include_once("classi/Connessione.php");
+include_once("classi/Veicolo.php");
 checkSession(0);
 $Dati = '';
 
-
-$sql = '';
-$conn = mysqli_connect('localhost','avoc','','my_avoc');
 
 /* il mio pezzo */
 if ($stmt = $conn->prepare("SELECT tipo,durata,canoneMensile,totDaFinanziare,tanMensile,TargaVeicolo FROM Operazione WHERE IDutente = ? ")) {
@@ -18,13 +17,8 @@ if ($stmt = $conn->prepare("SELECT tipo,durata,canoneMensile,totDaFinanziare,tan
 		$stmt->close();
 	}
 
-	if ($stmt = $conn->prepare("SELECT prezzo FROM Veicolo WHERE TargaVeicolo = ?")) {
-    $stmt->bind_param("s", $targa);
-    $stmt->execute();
-    $stmt->bind_result($prezzo);
-    $stmt->fetch();
-    $stmt->close();
-	}
+
+    $prezzo = Veicolo::getPrezzoByTarga($targa);
 
 	$costiFissi = 200 + 300 + 16 + 3 + 3.50 + number_format(($prezzo * 0.0021) , 2, '.', '');
 
@@ -207,7 +201,7 @@ if ($stmt = $conn->prepare("SELECT tipo,durata,canoneMensile,totDaFinanziare,tan
         <!-- titoletto -->
         <div class="row">
             <div class="col">
-                <p class="center">Prestito on line: confronta e calcola la rata del tuo finanziamento</p>
+                <p class="center">Un mondo più vicino ai clienti</p>
             </div>
         </div>
 
@@ -334,7 +328,7 @@ if ($stmt = $conn->prepare("SELECT tipo,durata,canoneMensile,totDaFinanziare,tan
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
-            © 2019 Copyright:
+            © 2022 Copyright:
             <a class="colorWhite" href="home.php"> Avoc.altervista.org</a>
         </div>
         <!-- Copyright -->

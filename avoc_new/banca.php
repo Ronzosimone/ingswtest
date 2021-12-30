@@ -52,6 +52,16 @@ while($row = $result->fetch_assoc())
 
 
     mysqli_close($conn);
+
+
+
+    if(isset($_POST['btn-inserisciVeicolo'])){
+        header("Location: http://www.google.com");
+        exit();
+    }
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -90,6 +100,10 @@ while($row = $result->fetch_assoc())
             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
             background-image: -webkit-linear-gradient(330deg, #e0c3fc 0%, #8ec5fc 100%);
             background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+        }
+
+        .mmTop{
+            margin-top: 3%;
         }
     </style>
 </head>
@@ -151,7 +165,81 @@ while($row = $result->fetch_assoc())
         <!-- titoletto -->
         <div class="row">
             <div class="col">
-                <p class="center">Prestito on line: confronta e calcola la rata del tuo finanziamento</p>
+                <p class="center">Un mondo più vicino ai clienti</p>
+            </div>
+        </div>
+
+
+         <!-- Inserimento macchina -->
+         <div class="row mmTop">
+            <div class="col">
+                <div class="jumbotron text-center">
+                    <h2 class="card-title h2">Inserimento nuova auto</h2>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-xl-7 pb-2">
+                        <form method="post">
+                            <p class="card-text">Inserisci tutte le informazioni all'interno delle caselle di testo.</p>
+                                <div class="row mmTop">
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="text" id="verificaMarca" class="form-control"  placeholder="Marca" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="text" id="verificaModello" class="form-control" placeholder="Modello" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="text" id="verificaVersione" class="form-control" placeholder="Versione" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="datetime" id="verificaAnno" class="form-control" placeholder="Anno Immatri." onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mmTop">
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="number" id="verificaPrezzo" class="form-control" placeholder="Prezzo" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="number" id="verificaPeso" class="form-control" placeholder="Peso" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="number" id="verificaLunghezza" class="form-control" placeholder="Lunghezza"  onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="number" id="verificaLarghezza" class="form-control" placeholder="Larghezza" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="form-outline">
+                                            <input type="number" id="verificaPosti" class="form-control" placeholder="Posti" onchange="verifica()" required/>
+                                          </div>
+                                    </div>
+                                </div>
+
+
+                                </form> 
+                        </div>
+                    </div>
+                </div>
+                    <button type = "submit" class="btn btn-lg btn-block jumbotron text-center center btn-primary calcola" data-toggle="modal" data-target="#modalRegisterForm" id="btnInserisci" name="btnInserisci" onclick="inserisciVeicolo()" value="Btn inserisci" disabled>
+                        <h1 class="text-white center text font-weight-bold" >
+                            inserisci
+                        </h1>
+                    </button>
             </div>
         </div>
 
@@ -283,6 +371,40 @@ while($row = $result->fetch_assoc())
               }
           });
     }
+
+    function verifica() {
+            if (document.getElementById('verificaMarca').value != "" && document.getElementById('verificaModello').value != "" && document.getElementById('verificaVersione').value != "" && document.getElementById('verificaAnno').value != "" && document.getElementById('verificaPrezzo').value != "" && document.getElementById('verificaPeso').value != ""  && document.getElementById('verificaPrezzo').value != "" && document.getElementById('verificaPeso').value != ""  && document.getElementById('verificaLunghezza').value != "" && document.getElementById('verificaLarghezza').value != "" && document.getElementById('verificaPosti').value != "" ) {
+				document.getElementById("btnInserisci").disabled = false; 
+			}
+            else{
+                document.getElementById("btnInserisci").disabled = true; 
+            }
+        }     
+        
+        function inserisciVeicolo(){
+            Marca = $("#verificaMarca").val();
+            Modello = $("#verificaModello").val();
+            Versione = $("#verificaVersione").val();
+            Anno = $("#verificaAnno").val();
+            Prezzo = $("#verificaPrezzo").val();
+            Peso = $("#verificaPeso").val();
+            Lunghezza = $("#verificaLunghezza").val();
+            Larghezza = $("#verificaLarghezza").val();
+            Posti = $("#verificaPosti").val();
+            $.ajax({
+                    type:'POST',
+                    data:"marca="+Marca+"&modello="+Modello+"&versione="+Versione+"&anno="+Anno+"&prezzo="+Prezzo+"&peso="+Peso+"&lunghezza="+Lunghezza+"&larghezza="+Larghezza+"&posti="+Posti,
+                    url:'php/gVeicolo.php',
+                    success:function(data) {
+                        window.location.href = data;
+                        alert("Veicolo aggiunto");
+                        location.reload();
+                    },
+                    error:function(data){
+                        alert("Errore, veicolo non aggiunto");
+                    }
+                });
+        }
     </script>
 </body>
 </html>

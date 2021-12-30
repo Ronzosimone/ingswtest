@@ -86,7 +86,7 @@ if(isset($_SESSION['UserId']))
         <!-- titoletto -->
         <div class="row">
             <div class="col">
-                <p class="center">Prestito on line: confronta e calcola la rata del tuo finanziamento</p>
+                <p class="center">Un mondo più vicino ai clienti</p>
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@ if(isset($_SESSION['UserId']))
             <div>
                 <h2 class="card-title h1-responsive pt-3 mb-5 font-bold"><strong>Cosa è Avoc?</strong></h2>
                 <p class="mx-5 mb-5">
-                    Il progetto Avoc è nato come risposta alla richiesta del docente di creare una startup che potesse includere gli argomenti della prima parte del corso sfruttando le qualità dei vari componenti del gruppo. Specializzati in ambito informatico un sito è parsa sin da subito la soluzione ideale ,ci siamo quindi concentrati sul leasing e sul noleggio a lungo termine di autoveicoli passione condivisa nel gruppo e ambito suggerito anche dal docente
+                    L'avoc nasce con l'obiettivo di mettere a confronto leasing e noleggio di una determinata vettura, in modo tale da consentire ai clienti di scegliere il tipo di servizio più vantaggioso.
                 </p>
             </div>
         </div>
@@ -232,7 +232,7 @@ if(isset($_SESSION['UserId']))
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
-            © 2019 Copyright:
+            © 2022 Copyright:
             <a class="colorWhite" href="home.php"> Avoc.altervista.org</a>
         </div>
         <!-- Copyright -->

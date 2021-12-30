@@ -1,16 +1,17 @@
 <?php
 
-    class UtenteRegistrato extends Utente{
-
-        public $nickName;
-        public $password;
-        public $idCliente;
+    class Admin extends UtenteRegistrato{
 
         function __construct($nickName, $password, $idCliente) {
             $this->nickName = $nickName;
             $this->password = $password;
             $this->idCliente = $idCliente;
+            $this->idAmministratore = 1;
         }
+        
+
+        
+        
 
     }
 

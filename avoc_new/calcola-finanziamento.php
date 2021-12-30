@@ -1,13 +1,12 @@
 <?php
 
-include_once("php/Connessione.php");
+include_once("classi/Connessione.php");
 
 session_start();
   $op ='onclick="window.location.href='."'".'registrazione.php'."'".'"';
   $avvertimento = '<h6 style="color:red">*E'."'".' richiesto un account per continuare*</h6>';
 
   if(isset($_SESSION['UserId'])){
-    $sql = '';
     $stmt = $conn->prepare("select count(codice) as num from Operazione o where o.IDutente = ?");
     $stmt->bind_param('i', $_SESSION['UserId']);
     $stmt->execute();
@@ -26,8 +25,27 @@ session_start();
       $op ='onclick="window.location.href='."'".'registrazione.php'."'".'"';
       $avvertimento = '<h6 style="color:red">*E'."'".' permesso un solo finanziamento per account*</h6>';
     }
+
+    //populate();
+
+    $conn->close();
+  }
+
+
+  function populate(){
+    include_once("php/Connessione.php");
+    $stmt = $conn->prepare("SELECT DISTINCT(marca) FROM Veicolo");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while($row = $result->fetch_assoc())
+    {
+        $Dati = $Dati.'<option>';
+    }
   }
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -125,7 +143,7 @@ session_start();
         <!-- titoletto -->
         <div class="row">
             <div class="col">
-                <p class="center">Prestito on line: confronta e calcola la rata del tuo finanziamento</p>
+                <p class="center">Un mondo più vicino ai clienti</p>
             </div>
         </div>
 
@@ -314,8 +332,8 @@ session_start();
     <footer class="page-footer font-small young-passion-gradient mTop">
 
         <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">+
-            © 2019 Copyright:
+        <div class="footer-copyright text-center py-3">
+            © 2022 Copyright:
             <a class="colorWhite" href="home.php"> Avoc.altervista.org</a>
         </div>
         <!-- Copyright -->
