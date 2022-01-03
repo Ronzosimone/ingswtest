@@ -132,15 +132,6 @@ while($row = $result->fetch_assoc())
                 </ul>
                 <ul class="navbar-nav nav-flex-icons">
                   <li class="nav-item"><a class="nav-link" href="home.php?Logout"  id="log">Logout</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-instagram"></i></a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -234,6 +225,7 @@ while($row = $result->fetch_assoc())
                                 </form> 
                         </div>
                     </div>
+                    <p class="mmTop"><b>*[Anno]: YYYY-mm-dd, <span>&nbsp;</span> *[Prezzo]: virgola decimali, <span>&nbsp;</span> *[Peso]: in Kg, <span>&nbsp;</span> *[Lughezza/larghezza]: in cm</b></p>
                 </div>
                     <button type = "submit" class="btn btn-lg btn-block jumbotron text-center center btn-primary calcola" data-toggle="modal" data-target="#modalRegisterForm" id="btnInserisci" name="btnInserisci" onclick="inserisciVeicolo()" value="Btn inserisci" disabled>
                         <h1 class="text-white center text font-weight-bold" >
@@ -350,7 +342,7 @@ while($row = $result->fetch_assoc())
       $.ajax({
               type:'POST',
               data:"Marca="+Marca+"&Modello="+Modello+"&Versione="+Versione+"&Targa="+Targa+"&Annoimmatricolazione="+Annoimmatricolazione+"&Prezzo="+Prezzo+"&NumPosti="+NumPosti+"&Lunghezza="+Lunghezza+"&Larghezza="+Larghezza+"&Peso="+Peso,
-              url:'php/mod.php',
+              url:'php/veicolo/mod.php',
               success:function(data) {
                   //window.location.href = data;
                   alert('Modifica Effettuata!');
@@ -364,7 +356,7 @@ while($row = $result->fetch_assoc())
       $.ajax({
               type:'POST',
               data:"Targa="+targa,
-              url:'php/del.php',
+              url:'php/veicolo/del.php',
               success:function(data) {
                   alert(data);
                   window.location.href = window.location.href;
@@ -394,7 +386,7 @@ while($row = $result->fetch_assoc())
             $.ajax({
                     type:'POST',
                     data:"marca="+Marca+"&modello="+Modello+"&versione="+Versione+"&anno="+Anno+"&prezzo="+Prezzo+"&peso="+Peso+"&lunghezza="+Lunghezza+"&larghezza="+Larghezza+"&posti="+Posti,
-                    url:'php/gVeicolo.php',
+                    url:'php/veicolo/ins.php',
                     success:function(data) {
                         window.location.href = data;
                         alert("Veicolo aggiunto");

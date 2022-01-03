@@ -14,14 +14,22 @@
             $this->idAmministratore = -1;
         }
 
-        function static generateAdmin(){
+        static function generateAdmin(){
             $conn = mysqli_connect('localhost','avoc','','my_avoc');
             if ($stmt = $conn->prepare("UPDATE Login SET idBanca = 1 WHERE Nickname = ?")) {
                 $stmt->bind_param("sssd", $nickName);
                 $stmt->execute();
             }
             $conn->close();
-            return $targa;
+        }
+
+        public function inserisciUtenteRegistrato(){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("INSERT INTO Login (idUtente,Nickname,Password,idCliente) VALUES (null,?,?,?)")) {
+                $stmt->bind_param("ssi",  $this->nickName, $this->password, $this->idCliente);
+                $stmt->execute();
+            }
+            $conn->close();
         }
 
     }

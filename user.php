@@ -3,6 +3,7 @@ session_start();
 include_once("php/utils.php");
 include_once("classi/Connessione.php");
 include_once("classi/Veicolo.php");
+include_once("classi/Riepilogo.php");
 checkSession(0);
 $Dati = '';
 
@@ -71,10 +72,7 @@ if ($stmt = $conn->prepare("SELECT tipo,durata,canoneMensile,totDaFinanziare,tan
 	}
 
 	//Prima tabella
-	$stmt = $conn->prepare("Select o.codice as Codice,o.totdaFinanziare,o.anticipo,v.targaVeicolo,v.marca,v.modello,v.versione,v.targaVeicolo,o.durata - o.mesiPagati as rimanenti ,canoneMensile as Rata,o.tanFisso,v.Prezzo,o.tipo from Veicolo v inner join Operazione o on v.targaVeicolo = o.targaVeicolo where o.IDutente = ?");
-	$stmt->bind_param('i', $_SESSION['UserId']);
-	$stmt->execute();
-	$result=$stmt->get_result();
+	$result = Riepilogo::creazioneTabella($_SESSION['UserId']);
 
 	$cap;
 	// vedi
@@ -167,15 +165,6 @@ if ($stmt = $conn->prepare("SELECT tipo,durata,canoneMensile,totDaFinanziare,tan
                 </ul>
                 <ul class="navbar-nav nav-flex-icons">
 									<li class="nav-item"><a class="nav-link" href="home.php?Logout"  id="log">Logout</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-instagram"></i></a>
-                    </li>
                 </ul>
             </div>
         </nav>

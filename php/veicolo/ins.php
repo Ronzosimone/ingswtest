@@ -1,6 +1,6 @@
 <?php
 
-    include_once ("../classi/Veicolo.php");
+    include_once ("../../classi/Veicolo.php");
 
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,7 +18,12 @@
 
         $veicoloDaAggiungere = new Veicolo($Marca, $Modello, $Versione, $Anno, $Prezzo, $Peso, $Lunghezza, $Larghezza, $Posti);
         $veicoloDaAggiungere->inserisciVeicolo();
-
-        echo "qwerqwerqwerqwerqwer";
     }
+
+
+
+
+
+
+
 ?>

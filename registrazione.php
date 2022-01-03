@@ -16,24 +16,12 @@ if (isset($_POST["pass"]) && isset($_POST["pass2"])) {
         //Registrazione del nuovo utente
         if (isset($_POST["pass"])) {
 
-
             //Utente cliente
             $utente = new Utente($_POST["cognome"], $_POST["nome"], $_POST["nascita"], $_POST["cf"], $_POST["email"]);
-            $stmt = $conn->prepare("INSERT INTO Utente (cognome,nome,dataNascita,CF,email) VALUES (?,?,?,?,?)");
-            $stmt->bind_param("sssss", $utente->cognome, $utente->nome, $utente->dataNascita, $utente->CF, $utente->email);
-            $stmt->execute();
-
+            $utente->inserisciUtente();
 
             //Recupero id appena registrato
-            $stmt = $conn->prepare("SELECT ID from Utente where cf=?");
-            $stmt->bind_param("s", $_POST["cf"]);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $NuovoID = - 1;
-            while ($row = $result->fetch_assoc()) {
-                $NuovoID = $row["ID"];
-            }
-
+            $NuovoID = Utente::recuperoIdUtente($_POST["cf"]);
 
             //Utente id login
             $Pass = $_POST["pass"];
@@ -41,9 +29,7 @@ if (isset($_POST["pass"]) && isset($_POST["pass2"])) {
             $Nick = 0;
             $Nick = $utente->generaNick($Nick);
             $utenteReg = new UtenteRegistrato($Nick, $CryptPass, $NuovoID);
-            $stmt = $conn->prepare("INSERT INTO Login (idUtente,Nickname,Password,idCliente) VALUES (null,?,?,?)");
-            $stmt->bind_param("ssi", $utenteReg->nickName, $utenteReg->password, $utenteReg->idCliente);
-            $stmt->execute();
+            $utenteReg->inserisciUtenteRegistrato();
             echo '<script>alert("Registrato correttamente come ' . $Nick . '");window.location.href = "calcola-finanziamento.php";</script>';
             $_SESSION["UserId"] = $NuovoID;
             $_SESSION["UserType"] = 0;
@@ -126,16 +112,7 @@ if (isset($_POST["pass"]) && isset($_POST["pass2"])) {
                 </ul>
                 <ul class="navbar-nav nav-flex-icons">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLoginForm" id="log"><i class="fas fa-users"></i>Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-instagram"></i></a>
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLoginForm" id="log"><i class="fas fa-users"></i>Sign in</a>
                     </li>
                 </ul>
             </div>

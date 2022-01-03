@@ -79,8 +79,27 @@
             $this->mesiPagati = (rand(1, $mesi));
             
         }
-        
 
+        public function inserisciRiepilogo($sessId){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("INSERT INTO Operazione (tipo, durata, mesiPagati, anticipo, km, valoreRiscatto, canoneMensile, tanFisso, totDaFinanziare, totDaRimborsare, marchiature, polizzaPneumatici, bolliContrattuali, speseIstruttoria, speseRendiconto, sepa, IDutente, TargaVeicolo, interessi, tanMensile, taeg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+                $stmt->bind_param("siididddddddddddisddd", $this->tipo, $this->mesi, $this->mesiPagati, $this->anticipo, $this->chilometraggio, $this->riscatto, $this->rataMensile, $this->tanFisso, $this->totDaFinanziare, $this->totDaRimborsare, $this->marchiatura, $this->pneumatici, $this->bolli, $this->speseIstruttoria, $this->speseRendiconto, $this->sepa, $sessId, $this->targa, $this->interessi, $this->tanMensile, $this->taeg);
+                $stmt->execute();
+            }
+            $conn->close();
+        }
+        
+        public static function creazioneTabella($sessId){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("Select o.codice as Codice,o.totdaFinanziare,o.anticipo,v.targaVeicolo,v.marca,v.modello,v.versione,v.targaVeicolo,o.durata - o.mesiPagati as rimanenti ,canoneMensile as Rata,o.tanFisso,v.Prezzo,o.tipo from Veicolo v inner join Operazione o on v.targaVeicolo = o.targaVeicolo where o.IDutente = ?")) {
+                $stmt->bind_param('i', $sessId);
+	            $stmt->execute();
+                return $stmt->get_result();
+            }else{
+                echo "Errore";
+            }
+            $conn->close();
+        }
     }
 
 

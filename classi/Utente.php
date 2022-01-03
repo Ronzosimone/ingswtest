@@ -1,6 +1,6 @@
 <?php
 
-    class abstract Utente{
+    class Utente{
 
         public $cognome;
         public $nome;
@@ -16,10 +16,6 @@
 
             if(strlen($nome) == 0){
                 throw new Exception("Nome non valido");
-            }
-
-            if(Utente::validateDate($dataNascita) == false){
-                throw new Exception("Data di nascita non valida");
             }
 
             if(strlen($CF) != 16){
@@ -38,12 +34,6 @@
         }
 
 
-        private static function validateDate($date, $format = 'Y-m-d'){
-            $d = DateTime::createFromFormat($format, $date);
-            // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
-            return $d && $d->format($format) === $date;
-        }
-
         function generaNick($Nick){
             $TemptoCheck = "avoc-".rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9);
             $conn = mysqli_connect('localhost','avoc','','my_avoc');
@@ -61,6 +51,26 @@
               return $Nick;
           }
 
+        public function inserisciUtente(){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("INSERT INTO Utente (cognome, nome, dataNascita, CF, email) VALUES (?,?,?,?,?)")) {
+                $stmt->bind_param("sssss", $this->cognome, $this->nome, $this->dataNascita, $this->CF, $this->mail);
+                $stmt->execute();
+            }
+            $conn->close();
+        }
+
+        public static function recuperoIdUtente($codiceFiscale){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("SELECT ID from Utente where CF = ?")) {
+                $stmt->bind_param("s", $codiceFiscale);
+                $stmt->execute();
+                $stmt->bind_result($idUtente);
+                $stmt->fetch();
+                $conn->close();
+            }
+            return $idUtente;
+        }
 
     }
 

@@ -4,7 +4,7 @@ include_once("php/utils.php");
 if(isset($_GET['Logout'])){
   logout();
 }
-$UserNavItems = '<li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalRegisterForm" id="log"><i class="fas fa-users"></i>Login</a></li>';
+$UserNavItems = '<li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalRegisterForm" id="log"><i class="fas fa-users"></i>Sign in</a></li>';
 if(isset($_SESSION['UserId']))
 {
   $UserNavItems = '<li class="nav-item"><a class="nav-link" href="home.php?Logout"  id="log">Logout</a></li>';
@@ -55,13 +55,7 @@ if(isset($_SESSION['UserId']))
                 <ul class="navbar-nav nav-flex-icons">
                     <?php echo $UserNavItems; ?>
                     <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-instagram"></i></a>
+                        <a class="nav-link" href="registrazione.php"><i class="fas fa-user-edit"></i>Sing up</a>
                     </li>
                 </ul>
             </div>

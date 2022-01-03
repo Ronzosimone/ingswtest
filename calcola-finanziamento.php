@@ -31,18 +31,6 @@ session_start();
     $conn->close();
   }
 
-
-  function populate(){
-    include_once("php/Connessione.php");
-    $stmt = $conn->prepare("SELECT DISTINCT(marca) FROM Veicolo");
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    while($row = $result->fetch_assoc())
-    {
-        $Dati = $Dati.'<option>';
-    }
-  }
 ?>
 
 
@@ -87,7 +75,7 @@ session_start();
     </style>
 
 </head>
-<body class="scrollbar-warning">
+<body class="scrollbar-warning" onload="loadSelect()">
     <!-- Header -->
     <header>
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark young-passion-gradient scrolling-navbar nav">
@@ -110,15 +98,6 @@ session_start();
 
                 </ul>
                 <ul class="navbar-nav nav-flex-icons">
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-instagram"></i></a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -159,16 +138,13 @@ session_start();
                             <?php echo $avvertimento ?>
                                 <div class="row">
                                     <div class="col center">
-                                        <select name="brand" id="brand" class="custom-select custom-select-sm btn-pink" onchange="myModello()">
+                                        <select name="brand" id="brand" class="custom-select custom-select-sm btn-pink" onchange="myBrand(this)">
                                             <option selected>Brand</option>
-                                            <option value="alfa romeo">Alfa Romeo</option>
-                                            <option value="fiat">Fiat</option>
-                                            <option value="renault">Renault</option>
-                                            <option value="jaguar">Jaguar</option>
+
                                         </select>
                                     </div>
                                     <div class="col center">
-                                        <select name="modello" id="modello" class="custom-select custom-select-sm btn-pink" onchange="myVersione()">
+                                        <select name="modello" id="modello" class="custom-select custom-select-sm btn-pink" onchange="myVersione(this)">
                                             <option selected>Modello</option>
                                         </select>
                                     </div>
@@ -354,5 +330,128 @@ session_start();
     <script type="text/javascript" src="js/calcolaFinanziamento.js"></script>
 	<!-- Ajax -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script>
+
+        function loadSelect(){
+            $.ajax({
+                url : 'php/calcoloFinanziamento/brand.php',
+                type : 'POST',
+                success : function(data) {              
+
+                    var result = $.parseJSON(data);
+                    var sel = document.getElementById('brand');
+
+                    for (var i = 0; i < result.length; i++){
+                    var obj = result[i];
+                        for (var key in obj){
+                            var value = obj[key];
+                            var opt = document.createElement('option');
+                            opt.innerHTML = value;
+                            opt.value = value;
+                            sel.appendChild(opt);
+                        }
+                    }
+                },
+                error : function(request,error){
+                    alert("Errore marche");
+                }
+                });
+        }
+
+        function myBrand(selectObject){
+            document.getElementById('modello').options.length = 1;
+            document.getElementById('versione').options.length = 1;
+            document.getElementById("valore").innerHTML = "";
+            document.getElementById("valore").innerHTML = "0.00";
+            document.getElementById("myBtn").disabled = true;
+            $.ajax({
+                url : 'php/calcoloFinanziamento/fillModel.php',
+                type : 'POST',
+                data:"Brand="+selectObject.value,
+                success : function(data) {              
+
+                    var result = $.parseJSON(data);
+                    var sel = document.getElementById('modello');
+
+                    for (var i = 0; i < result.length; i++){
+                    var obj = result[i];
+                        for (var key in obj){
+                            var value = obj[key];
+                            var opt = document.createElement('option');
+                            opt.innerHTML = value;
+                            opt.value = value;
+                            sel.appendChild(opt);
+                        }
+                    }
+
+                },
+                error : function(request,error){
+                    alert("Errore versioni");
+                }
+                });
+        }
+
+        function myVersione(selectObject){
+            document.getElementById('versione').options.length = 1;
+            document.getElementById("myBtn").disabled = true;
+            document.getElementById("valore").innerHTML = "";
+            document.getElementById("valore").innerHTML = "0.00";
+            document.getElementById("myBtn").disabled = true;
+            $.ajax({
+                url : 'php/calcoloFinanziamento/fillVersione.php',
+                type : 'POST',
+                data:"Versione="+selectObject.value,
+                success : function(data) {              
+
+                    var result = $.parseJSON(data);
+                    var sel = document.getElementById('versione');
+
+                    for (var i = 0; i < result.length; i++){
+                    var obj = result[i];
+                        for (var key in obj){
+                            var value = obj[key];
+                            var opt = document.createElement('option');
+                            opt.innerHTML = value;
+                            opt.value = value;
+                            sel.appendChild(opt);
+                        }
+                    }
+
+                },
+                error : function(request,error){
+                    alert("Errore versioni");
+                }
+                });
+        }
+
+
+        function calcola() {
+                var brand = document.getElementById("brand").value;
+				var modello = document.getElementById("modello").value;
+				var versione = document.getElementById("versione").value;
+                var url_ok = "php/calcoloFinanziamento/calcola.php";
+                $.ajax({
+                    type: "POST",
+                    url: url_ok,
+                    data: {
+                        "brand": brand,
+                        "modello": modello,
+						"versione": versione,
+                    },
+                    success: function(risposta) {
+						document.getElementById("valore").innerHTML = risposta;
+						document.getElementById("datiBrand").innerHTML = brand;
+						document.getElementById("datiModello").innerHTML = modello;
+						document.getElementById("datiVersione").innerHTML = versione;
+						document.getElementById("datiPrezzo").innerHTML = risposta;
+                    },
+                error : function(request,error){
+                    alert("Errore calcolo");
+                }});
+				document.getElementById("myBtn").disabled = false;
+            }
+
+    </script>
 </body>
 </html>

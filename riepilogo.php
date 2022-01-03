@@ -89,11 +89,7 @@ if (isset($_POST['setValues'])) {
     if ($conn->connect_errno) {
         exit();
     }
-    if ($stmt = $conn->prepare("INSERT INTO Operazione (tipo, durata, mesiPagati, anticipo, km, valoreRiscatto, canoneMensile, tanFisso, totDaFinanziare, totDaRimborsare, marchiature, polizzaPneumatici, bolliContrattuali, speseIstruttoria, speseRendiconto, sepa, IDutente, TargaVeicolo, interessi, tanMensile, taeg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-        $stmt->bind_param("siididddddddddddisddd", $riepilogo->tipo, $riepilogo->mesi, $riepilogo->mesiPagati, $riepilogo->anticipo, $riepilogo->chilometraggio, $riepilogo->riscatto, $riepilogo->rataMensile, $riepilogo->tanFisso, $riepilogo->totDaFinanziare, $riepilogo->totDaRimborsare, $riepilogo->marchiatura, $riepilogo->pneumatici, $riepilogo->bolli, $riepilogo->speseIstruttoria, $riepilogo->speseRendiconto, $riepilogo->sepa, $_SESSION['UserId'], $riepilogo->targa, $riepilogo->interessi, $riepilogo->tanMensile, $riepilogo->taeg);
-        $stmt->execute();
-    }
-    $conn->close();
+    $riepilogo->inserisciRiepilogo($_SESSION['UserId']);
     echo '<script>alert("Eskere- ' . $_SESSION['UserId'] . '");</script>';
     header("location: user.php"); /*Redirect*/
 }
@@ -165,18 +161,6 @@ if (isset($_POST['setValues'])) {
 
                 </ul>
                 <ul class="navbar-nav nav-flex-icons">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-toggle="modal" data-target="#modalRegisterForm" id="log"><i class="fas fa-users"></i>Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><i class="fab fa-instagram"></i></a>
-                    </li>
                 </ul>
             </div>
         </nav>

@@ -51,12 +51,23 @@
         }
 
 
-        // esistono ma sono implementati altrove
-        public static function eliminaVeicolo(){
+        public static function eliminaVeicolo($targa){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if($stmt = $conn->prepare("delete from Veicolo where TargaVeicolo = ?")){
+                $stmt->bind_param('s',$_POST['Targa']);
+                $stmt->execute();
+            }
+            $conn->close();
         }
 
-        // esistono ma sono implementati altrove
-        public static function modificaVeicolo(){
+
+        public static function modificaVeicolo($marca, $modello, $versione, $anno, $prezzo, $peso, $lunghezza, $larghezza, $posti, $targa){
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if($stmt = $conn->prepare("UPDATE Veicolo SET marca=?,modello=?,versione=?,annoimmatricolazione=?,prezzo=?,peso=?,lunghezza=?,larghezza=?,numPosti=? where targaVeicolo=?")){
+                $stmt->bind_param('ssssssssss',$marca, $modello, $versione, $anno, $prezzo, $peso, $lunghezza, $larghezza, $posti, $targa);
+                $stmt->execute();
+            }
+            $conn->close();
         }
 
         public static function getTarga($marca, $modello, $versione, $prezzoVeicolo){
@@ -84,6 +95,55 @@
                 }
             return $prezzo;
         }
+
+        public static function getBrand(){
+            $marche = NULL;
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("select distinct(marca) from Veicolo")) {
+                $stmt->execute();
+                $marche = $stmt->get_result();
+                $stmt->close();
+                }
+            return $marche;
+        }
+
+        public static function getModel($brand){
+            $versioni = NULL;
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("SELECT DISTINCT(modello) FROM Veicolo WHERE marca = ?")) {
+                $stmt->bind_param("s", $brand);
+                $stmt->execute();
+                $versioni = $stmt->get_result();
+                $stmt->close();
+                }
+            return $versioni;
+        }
+
+        public static function getVersion($modello){
+            $versioni = NULL;
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("SELECT DISTINCT(versione) FROM Veicolo WHERE modello = ?")) {
+                $stmt->bind_param("s", $modello);
+                $stmt->execute();
+                $versioni = $stmt->get_result();
+                $stmt->close();
+                }
+            return $versioni;
+        }
+
+        public static function getPrezzo($brand, $modello, $versione){
+            $prezzo = NULL;
+            $conn = mysqli_connect('localhost','avoc','','my_avoc');
+            if ($stmt = $conn->prepare("SELECT prezzo FROM Veicolo WHERE marca = ? AND modello = ? AND versione = ?")) {
+                $stmt->bind_param("sss", $brand, $modello, $versione);
+                $stmt->execute();
+                $stmt->bind_result($prezzo);
+                $stmt->fetch();
+                $stmt->close();
+            }
+            return $prezzo;
+        }
+
 
     }
 

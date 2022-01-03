@@ -1,0 +1,37 @@
+1. modificaVeicolo
+2. eliminaVeicolo
+3. integrazione con banca.php
+4. inserisci riepilogo
+5. inserisciUtenteRegistrato in classe (utenteregistrato.php)
+6. recuperoIdUtentein classe (utente.php)
+7. issue in registrazione.php
+
+
+	    //Recupero id appena registrato
+            $stmt = $conn->prepare("SELECT ID from Utente where cf=?");
+            $stmt->bind_param("s", $_POST["cf"]);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $NuovoID = - 1;
+            while ($row = $result->fetch_assoc()) {
+                $NuovoID = $row["ID"];
+            }
+
+8. classe utente.php -> da abstract a normale
+9- inseisciUtente() in classe (utente.php)
+10. user.php inserimento tabella classe riepilogo.php
+11. vedere se ci sono tutti gli include
+12. da gVeicolo a ins
+13. riorganizzazione in cartelle php utilities
+14. in caso di errori verificare i percorsi
+15. refactoring code
+16. calcola-finanziamento.php -> brand.php
+17. calcola-finanziamento.php -> fillVersione.php
+18. calcola-finanziamento.php -> fillModel.php
+19. calcola-finanziamento.php -> calcola.php
+20. alcola-finanziamento.php -> calcolaFinanziamento.js
+21. eliminazione facebook instagram twitter
+22. login registrazione -> sign in sign up
+23. calcolo finanziamento prezzo disable button e prezzo 0.00
+24. descrizione inserimento in banca.php
+25. discutere tipo accesso a metodi / campi
