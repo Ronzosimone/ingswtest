@@ -1,0 +1,17 @@
+spostare la funzione genrateAdmin da Utenteregistrato ad Admin.
+Per accedere alla funzionalità "generateAdmin"-> voglio che l' utente che lo lancia sia di tipo Admin
+
+lasciare la possibilità ad un utente no registrato di visualizzare un riepilogo, bloccando la possibilità di sottoscrivere ->(Non sono registrato-> Non so se sono a db-> non posso assegnare il finanziamento)
+
+Creare tabella finanziamento in cui mettere (idCliente,idRiepilogo) questo per concedere a tutti gli utenti(loggato,non loggato,con o senza finaziamento) la possibilità di visualizzare un riepilogo, e nel caso in sia loggato e non abbia finanziamenti, possibilità di sottoscriverne uno.
+
+chiedere a Silviu cos si intende con chilometraggio,fissakm,costifissi,marchiatura,totRimborsare
+
+
+// class diagram abstract class
+
+// chatta con noi
+
+//Fix bug login
+
+
