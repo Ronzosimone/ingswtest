@@ -1,7 +1,7 @@
 <?php
 
     class Veicolo{
-        public $targaVeicolo;
+        public $idVeicolo;
         public $marca;
         public $modello;
         public $versione;
@@ -53,7 +53,7 @@
 
         public static function eliminaVeicolo($targa){
             $conn = mysqli_connect('localhost','avoc','','my_avoc');
-            if($stmt = $conn->prepare("delete from Veicolo where TargaVeicolo = ?")){
+            if($stmt = $conn->prepare("delete from Veicolo where idVeicolo = ?")){
                 $stmt->bind_param('s',$_POST['Targa']);
                 $stmt->execute();
             }
@@ -63,7 +63,7 @@
 
         public static function modificaVeicolo($marca, $modello, $versione, $anno, $prezzo, $peso, $lunghezza, $larghezza, $posti, $targa){
             $conn = mysqli_connect('localhost','avoc','','my_avoc');
-            if($stmt = $conn->prepare("UPDATE Veicolo SET marca=?,modello=?,versione=?,annoimmatricolazione=?,prezzo=?,peso=?,lunghezza=?,larghezza=?,numPosti=? where targaVeicolo=?")){
+            if($stmt = $conn->prepare("UPDATE Veicolo SET marca=?,modello=?,versione=?,annoimmatricolazione=?,prezzo=?,peso=?,lunghezza=?,larghezza=?,numPosti=? where idVeicolo=?")){
                 $stmt->bind_param('ssssssssss',$marca, $modello, $versione, $anno, $prezzo, $peso, $lunghezza, $larghezza, $posti, $targa);
                 $stmt->execute();
             }
@@ -73,7 +73,7 @@
         public static function getTarga($marca, $modello, $versione, $prezzoVeicolo){
             $targa = NULL;
             $conn = mysqli_connect('localhost','avoc','','my_avoc');
-            if ($stmt = $conn->prepare("SELECT TargaVeicolo FROM Veicolo WHERE marca=? AND modello=? AND versione=? AND prezzo=?")) {
+            if ($stmt = $conn->prepare("SELECT idVeicolo FROM Veicolo WHERE marca=? AND modello=? AND versione=? AND prezzo=?")) {
                 $stmt->bind_param("sssd", $marca, $modello, $versione, $prezzoVeicolo);
                 $stmt->execute();
                 $stmt->bind_result($targa);
@@ -86,7 +86,7 @@
         public static function getPrezzoByTarga($targa){
             $prezzo = NULL;
             $conn = mysqli_connect('localhost','avoc','','my_avoc');
-            if ($stmt = $conn->prepare("SELECT prezzo FROM Veicolo WHERE TargaVeicolo = ?")) {
+            if ($stmt = $conn->prepare("SELECT prezzo FROM Veicolo WHERE idVeicolo = ?")) {
                 $stmt->bind_param("s", $targa);
                 $stmt->execute();
                 $stmt->bind_result($prezzo);
